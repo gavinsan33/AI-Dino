@@ -8,19 +8,19 @@ from stable_baselines3 import PPO
 from stable_baselines3.common.vec_env import VecFrameStack
 from stable_baselines3.common.evaluation import evaluate_policy
 import random
-from gym_game.envs.pygame_2d import PyGame2D
-from gym_game.envs import pygame_2d
+from gym_game.training_envs.pygame_2d import PyGame2D
+from gym_game.training_envs import pygame_2d
 # from pygame_2d import PyGame2D
 
 class DinosaurGameEnv(Env):
     def __init__(self):
         self.pygame = PyGame2D()
-        self.screen_width = 1500
+        self.screen_width = 50
         
         self.low = np.array([0])
         self.high = np.array([3000])
         
-        self.action_space = Discrete(2)
+        self.action_space = Discrete(1000)
         self.observation_space = Box(low=self.low, high=self.high, dtype=float)
     
     def step(self, action): 
@@ -29,17 +29,15 @@ class DinosaurGameEnv(Env):
         ), f"{action!r} ({type(action)}) invalid"
         
         # print(action)
-        if(action == 1 and self.pygame.dino.jump_state == 0):
-            self.pygame.dino.jump()
+        if(action == 25 and self.pygame.dino.jump_state == 0):
+            self.pygame.dino.jump_state = 1
         # else:
         #     self.pygame.dino.jump_state = 0
         
         self.pygame.update()
         self.pygame.view()
         obs = self.pygame.observe()
-        # print(obs)
         reward = self.pygame.evaluate()
-        # print(reward)
         done = self.pygame.is_done()
         return obs, reward, done, {}
     
